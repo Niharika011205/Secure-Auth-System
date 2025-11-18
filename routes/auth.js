@@ -170,9 +170,17 @@ router.post('/login',
                 lastLogin: user.lastLogin
             };
 
-            console.log('✅ Session created, redirecting to dashboard');
-            req.flash('success_msg', `Welcome back, ${user.username}!`);
-            res.redirect('/dashboard');
+            // Save session before redirect
+            req.session.save((err) => {
+                if (err) {
+                    console.error('❌ Session save error:', err);
+                    req.flash('error_msg', 'Login failed. Please try again.');
+                    return res.redirect('/auth/login');
+                }
+                console.log('✅ Session saved, redirecting to dashboard');
+                req.flash('success_msg', `Welcome back, ${user.username}!`);
+                res.redirect('/dashboard');
+            });
         } catch (error) {
             console.error('❌ Login error:', error);
             req.flash('error_msg', 'Login failed. Please try again.');
