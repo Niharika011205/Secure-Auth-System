@@ -1,0 +1,113 @@
+<div class="container">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <div class="card">
+            <h1 style="color: #667eea; margin-bottom: 2rem; text-align: center;">
+                <i class="fas fa-user-circle"></i> User Profile
+            </h1>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div>
+                    <h3 style="color: #333; margin-bottom: 1rem;">Personal Information</h3>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-weight: 600; color: #666;">Username</label>
+                        <div style="padding: 0.8rem; background: #f8f9fa; border-radius: 8px; margin-top: 0.3rem;">
+                            <i class="fas fa-user" style="color: #667eea;"></i>
+                            <%= user.username %>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-weight: 600; color: #666;">Email Address</label>
+                        <div style="padding: 0.8rem; background: #f8f9fa; border-radius: 8px; margin-top: 0.3rem;">
+                            <i class="fas fa-envelope" style="color: #667eea;"></i>
+                            <%= user.email %>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-weight: 600; color: #666;">Account Created</label>
+                        <div style="padding: 0.8rem; background: #f8f9fa; border-radius: 8px; margin-top: 0.3rem;">
+                            <i class="fas fa-calendar" style="color: #667eea;"></i>
+                            <%= new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric' , month: 'long' ,
+                                day: 'numeric' , hour: '2-digit' , minute: '2-digit' }) %>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: #333; margin-bottom: 1rem;">Security Status</h3>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-weight: 600; color: #666;">Account Status</label>
+                        <div
+                            style="padding: 0.8rem; background: #d4edda; border-radius: 8px; margin-top: 0.3rem; color: #155724;">
+                            <i class="fas fa-check-circle"></i> Active & Verified
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-weight: 600; color: #666;">Failed Login Attempts</label>
+                        <div style="padding: 0.8rem; background: #f8f9fa; border-radius: 8px; margin-top: 0.3rem;">
+                            <% if (user.loginAttempts> 0) { %>
+                                <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
+                                <% } else { %>
+                                    <i class="fas fa-exclamation-triangle" style="color: #28a745;"></i>
+                                    <% } %>
+                                        <%= user.loginAttempts || 0 %> / 5
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-weight: 600; color: #666;">Last Login</label>
+                        <div style="padding: 0.8rem; background: #f8f9fa; border-radius: 8px; margin-top: 0.3rem;">
+                            <i class="fas fa-clock" style="color: #667eea;"></i>
+                            <%= user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('en-US', { year: 'numeric'
+                                , month: 'short' , day: 'numeric' , hour: '2-digit' , minute: '2-digit' })
+                                : 'First time login' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #667eea; margin-bottom: 1.5rem;">
+                <i class="fas fa-shield-alt"></i> Security Features Active
+            </h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div style="text-align: center; padding: 1rem; background: #e8f5e8; border-radius: 8px;">
+                    <i class="fas fa-key" style="font-size: 2rem; color: #28a745; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: #28a745;">Password Hashing</h4>
+                    <p style="color: #666; font-size: 0.9rem;">bcrypt with 12 salt rounds</p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem; background: #e3f2fd; border-radius: 8px;">
+                    <i class="fas fa-shield-virus" style="font-size: 2rem; color: #2196f3; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: #2196f3;">Brute Force Protection</h4>
+                    <p style="color: #666; font-size: 0.9rem;">5 attempts, 15min lockout</p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem; background: #fff3e0; border-radius: 8px;">
+                    <i class="fas fa-cookie-bite" style="font-size: 2rem; color: #ff9800; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: #ff9800;">Session Security</h4>
+                    <p style="color: #666; font-size: 0.9rem;">Secure httpOnly cookies</p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem; background: #f3e5f5; border-radius: 8px;">
+                    <i class="fas fa-tachometer-alt"
+                        style="font-size: 2rem; color: #9c27b0; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: #9c27b0;">Rate Limiting</h4>
+                    <p style="color: #666; font-size: 0.9rem;">100 requests/15min</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/dashboard" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>

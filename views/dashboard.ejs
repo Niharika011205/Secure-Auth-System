@@ -1,0 +1,115 @@
+
+
+<div class="container">
+    <div class="hero" style="padding: 2rem 0;">
+        <h1><i class="fas fa-tachometer-alt"></i> Welcome, <%= user.username %>!</h1>
+        <p>You are successfully authenticated with our secure system</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <span class="stat-number"><i class="fas fa-user"></i></span>
+            <span class="stat-label">Authenticated User</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number"><%= new Date(user.createdAt).toLocaleDateString() %></span>
+            <span class="stat-label">Member Since</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number"><%= user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'First Login' %></span>
+            <span class="stat-label">Last Login</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number"><%= user.loginAttempts || 0 %></span>
+            <span class="stat-label">Failed Attempts</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="color: #667eea; margin-bottom: 1.5rem;">
+            <i class="fas fa-user-circle"></i> Your Profile
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div>
+                <h4 style="color: #333; margin-bottom: 0.5rem;">Username</h4>
+                <p style="color: #666; font-size: 1.1rem;"><i class="fas fa-user"></i> <%= user.username %></p>
+            </div>
+            
+            <div>
+                <h4 style="color: #333; margin-bottom: 0.5rem;">Email</h4>
+                <p style="color: #666; font-size: 1.1rem;"><i class="fas fa-envelope"></i> <%= user.email %></p>
+            </div>
+            
+            <div>
+                <h4 style="color: #333; margin-bottom: 0.5rem;">Account Status</h4>
+                <p style="color: #28a745; font-size: 1.1rem;">
+                    <i class="fas fa-check-circle"></i> Active & Secure
+                </p>
+            </div>
+            
+            <div>
+                <h4 style="color: #333; margin-bottom: 0.5rem;">Security Level</h4>
+                <p style="color: #667eea; font-size: 1.1rem;">
+                    <i class="fas fa-shield-alt"></i> Maximum Security
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="color: #667eea; margin-bottom: 1.5rem;">
+            <i class="fas fa-shield-alt"></i> Active Security Features
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1rem; border-left: 4px solid #28a745; background: #f8f9fa;">
+                <h4 style="color: #28a745; margin-bottom: 0.5rem;">
+                    <i class="fas fa-key"></i> Session Security
+                </h4>
+                <p style="color: #666; font-size: 0.9rem;">Your session is protected with secure cookies and automatic expiration.</p>
+            </div>
+            
+            <div style="padding: 1rem; border-left: 4px solid #17a2b8; background: #f8f9fa;">
+                <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">
+                    <i class="fas fa-lock"></i> Password Protection
+                </h4>
+                <p style="color: #666; font-size: 0.9rem;">Your password is hashed with bcrypt using 12 salt rounds.</p>
+            </div>
+            
+            <div style="padding: 1rem; border-left: 4px solid #ffc107; background: #f8f9fa;">
+                <h4 style="color: #e67e22; margin-bottom: 0.5rem;">
+                    <i class="fas fa-shield-virus"></i> Brute Force Protection
+                </h4>
+                <p style="color: #666; font-size: 0.9rem;">Account locks after 5 failed login attempts for 15 minutes.</p>
+            </div>
+            
+            <div style="padding: 1rem; border-left: 4px solid #6f42c1; background: #f8f9fa;">
+                <h4 style="color: #6f42c1; margin-bottom: 0.5rem;">
+                    <i class="fas fa-tachometer-alt"></i> Rate Limiting
+                </h4>
+                <p style="color: #666; font-size: 0.9rem;">API requests are limited to prevent abuse and attacks.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="color: #667eea; margin-bottom: 1.5rem;">
+            <i class="fas fa-cogs"></i> Quick Actions
+        </h2>
+        
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="/dashboard/profile" class="btn btn-primary">
+                <i class="fas fa-user-edit"></i> View Profile
+            </a>
+            <a href="/dashboard/security" class="btn btn-outline">
+                <i class="fas fa-shield-alt"></i> Security Details
+            </a>
+            <form method="POST" action="/logout" style="display: inline;">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
