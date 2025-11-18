@@ -103,9 +103,11 @@ router.post('/login',
         body('password').notEmpty().withMessage('Password is required')
     ],
     async (req, res) => {
+        console.log('🔐 Login attempt:', req.body.email);
         const errors = validationResult(req);
         
         if (!errors.isEmpty()) {
+            console.log('❌ Validation errors:', errors.array());
             const errorMessages = errors.array().map(error => error.msg);
             req.flash('error_msg', errorMessages.join('. '));
             return res.redirect('/auth/login');
@@ -113,25 +115,32 @@ router.post('/login',
 
         try {
             const { email, password } = req.body;
+            console.log('🔍 Looking for user:', email);
 
             // Find user
             const user = await User.findOne({ email });
             if (!user) {
+                console.log('⚠️ User not found:', email);
                 req.flash('error_msg', 'Invalid email or password');
                 return res.redirect('/auth/login');
             }
 
+            console.log('✅ User found:', email);
+
             // Check if account is locked
             if (user.isLocked) {
+                console.log('🔒 Account is locked');
                 const lockTimeRemaining = user.lockTimeRemaining;
                 req.flash('error_msg', `Account locked due to too many failed login attempts. Try again in ${lockTimeRemaining} minutes.`);
                 return res.redirect('/auth/login');
             }
 
+            console.log('🔑 Verifying password...');
             // Verify password
             const isValidPassword = await bcrypt.compare(password, user.password);
             
             if (!isValidPassword) {
+                console.log('❌ Invalid password');
                 await user.incLoginAttempts();
                 const attemptsLeft = 5 - (user.loginAttempts + 1);
                 
@@ -143,11 +152,15 @@ router.post('/login',
                 return res.redirect('/auth/login');
             }
 
+            console.log('✅ Password valid');
+
             // Reset login attempts on successful login
             if (user.loginAttempts > 0) {
+                console.log('🔄 Resetting login attempts');
                 await user.resetLoginAttempts();
             }
 
+            console.log('💾 Creating session...');
             // Set session
             req.session.user = {
                 id: user._id,
@@ -157,10 +170,11 @@ router.post('/login',
                 lastLogin: user.lastLogin
             };
 
+            console.log('✅ Session created, redirecting to dashboard');
             req.flash('success_msg', `Welcome back, ${user.username}!`);
             res.redirect('/dashboard');
         } catch (error) {
-            console.error('Login error:', error);
+            console.error('❌ Login error:', error);
             req.flash('error_msg', 'Login failed. Please try again.');
             res.redirect('/auth/login');
         }
