@@ -67,6 +67,13 @@ app.use((req, res, next) => {
     next();
 });
 
+// Request timeout (must be before routes)
+app.use((req, res, next) => {
+    req.setTimeout(30000); // 30 seconds
+    res.setTimeout(30000);
+    next();
+});
+
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -114,13 +121,6 @@ app.use((err, req, res, next) => {
         title: 'Server Error',
         error: process.env.NODE_ENV === 'development' ? err : {}
     });
-});
-
-// Request timeout
-app.use((req, res, next) => {
-    req.setTimeout(30000); // 30 seconds
-    res.setTimeout(30000);
-    next();
 });
 
 const PORT = process.env.PORT || 5003;
