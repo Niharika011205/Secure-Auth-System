@@ -113,8 +113,17 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Request timeout
+app.use((req, res, next) => {
+    req.setTimeout(30000); // 30 seconds
+    res.setTimeout(30000);
+    next();
+});
+
 const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`🔒 Security features enabled`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+    console.log(`🗄️ MongoDB: ${process.env.MONGODB_URI ? 'Configured' : 'NOT CONFIGURED'}`);
 });

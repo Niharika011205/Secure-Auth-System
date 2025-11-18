@@ -48,9 +48,11 @@ router.post('/register',
         })
     ],
     async (req, res) => {
+        console.log('📝 Registration attempt:', req.body.email);
         const errors = validationResult(req);
         
         if (!errors.isEmpty()) {
+            console.log('❌ Validation errors:', errors.array());
             const errorMessages = errors.array().map(error => error.msg);
             req.flash('error_msg', errorMessages.join('. '));
             return res.redirect('/auth/register');
@@ -58,17 +60,21 @@ router.post('/register',
 
         try {
             const { username, email, password } = req.body;
+            console.log('🔍 Checking for existing user...');
 
             // Check if user exists
             const existingUser = await User.findOne({ $or: [{ email }, { username }] });
             if (existingUser) {
+                console.log('⚠️ User already exists');
                 req.flash('error_msg', 'User with this email or username already exists');
                 return res.redirect('/auth/register');
             }
 
+            console.log('🔐 Hashing password...');
             // Hash password
             const hashedPassword = await bcrypt.hash(password, 12);
 
+            console.log('💾 Creating user...');
             // Create user
             const user = new User({
                 username,
@@ -77,11 +83,13 @@ router.post('/register',
             });
 
             await user.save();
+            console.log('✅ User created successfully:', email);
 
             req.flash('success_msg', 'Registration successful! You can now login.');
+            console.log('🔄 Redirecting to /auth/login');
             res.redirect('/auth/login');
         } catch (error) {
-            console.error('Registration error:', error);
+            console.error('❌ Registration error:', error);
             req.flash('error_msg', 'Registration failed. Please try again.');
             res.redirect('/auth/register');
         }
