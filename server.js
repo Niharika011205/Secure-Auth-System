@@ -72,11 +72,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('✅ MongoDB connected'))
     .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Routes
-app.use('/', authRoutes);
-app.use('/dashboard', dashboardRoutes);
-
-// Home route
+// Home route (must be before other routes)
 app.get('/', (req, res) => {
     if (req.session.user) {
         return res.redirect('/dashboard');
@@ -92,6 +88,10 @@ app.get('/health', (req, res) => {
         uptime: process.uptime()
     });
 });
+
+// Routes
+app.use('/auth', authRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 // 404 handler
 app.use((req, res) => {

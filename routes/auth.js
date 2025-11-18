@@ -21,6 +21,19 @@ router.get('/register', (req, res) => {
     res.render('register', { title: 'Register' });
 });
 
+// Logout
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Logout error:', err);
+            req.flash('error_msg', 'Error logging out');
+            return res.redirect('/dashboard');
+        }
+        res.clearCookie('connect.sid');
+        res.redirect('/');
+    });
+});
+
 // Register POST
 router.post('/register',
     [
@@ -40,7 +53,7 @@ router.post('/register',
         if (!errors.isEmpty()) {
             const errorMessages = errors.array().map(error => error.msg);
             req.flash('error_msg', errorMessages.join('. '));
-            return res.redirect('/register');
+            return res.redirect('/auth/register');
         }
 
         try {
@@ -50,7 +63,7 @@ router.post('/register',
             const existingUser = await User.findOne({ $or: [{ email }, { username }] });
             if (existingUser) {
                 req.flash('error_msg', 'User with this email or username already exists');
-                return res.redirect('/register');
+                return res.redirect('/auth/register');
             }
 
             // Hash password
@@ -66,11 +79,11 @@ router.post('/register',
             await user.save();
 
             req.flash('success_msg', 'Registration successful! You can now login.');
-            res.redirect('/login');
+            res.redirect('/auth/login');
         } catch (error) {
             console.error('Registration error:', error);
             req.flash('error_msg', 'Registration failed. Please try again.');
-            res.redirect('/register');
+            res.redirect('/auth/register');
         }
     }
 );
@@ -87,7 +100,7 @@ router.post('/login',
         if (!errors.isEmpty()) {
             const errorMessages = errors.array().map(error => error.msg);
             req.flash('error_msg', errorMessages.join('. '));
-            return res.redirect('/login');
+            return res.redirect('/auth/login');
         }
 
         try {
@@ -97,14 +110,14 @@ router.post('/login',
             const user = await User.findOne({ email });
             if (!user) {
                 req.flash('error_msg', 'Invalid email or password');
-                return res.redirect('/login');
+                return res.redirect('/auth/login');
             }
 
             // Check if account is locked
             if (user.isLocked) {
                 const lockTimeRemaining = user.lockTimeRemaining;
                 req.flash('error_msg', `Account locked due to too many failed login attempts. Try again in ${lockTimeRemaining} minutes.`);
-                return res.redirect('/login');
+                return res.redirect('/auth/login');
             }
 
             // Verify password
@@ -119,7 +132,7 @@ router.post('/login',
                 } else {
                     req.flash('error_msg', 'Account locked due to too many failed login attempts. Try again in 15 minutes.');
                 }
-                return res.redirect('/login');
+                return res.redirect('/auth/login');
             }
 
             // Reset login attempts on successful login
@@ -141,22 +154,9 @@ router.post('/login',
         } catch (error) {
             console.error('Login error:', error);
             req.flash('error_msg', 'Login failed. Please try again.');
-            res.redirect('/login');
+            res.redirect('/auth/login');
         }
     }
 );
-
-// Logout
-router.post('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Logout error:', err);
-            req.flash('error_msg', 'Error logging out');
-            return res.redirect('/dashboard');
-        }
-        res.clearCookie('connect.sid');
-        res.redirect('/');
-    });
-});
 
 module.exports = router;

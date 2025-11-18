@@ -273,16 +273,16 @@
                     <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
                     <a href="/dashboard/profile"><i class="fas fa-user"></i> Profile</a>
                     <a href="/dashboard/security"><i class="fas fa-lock"></i> Security</a>
-                    <form method="POST" action="/logout" style="display: inline;">
+                    <form method="POST" action="/auth/logout" style="display: inline;">
                         <button type="submit" class="btn btn-danger">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </form>
                 <% } else { %>
-                    <a href="/login" class="btn btn-outline">
+                    <a href="/auth/login" class="btn btn-outline">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </a>
-                    <a href="/register" class="btn btn-primary">
+                    <a href="/auth/register" class="btn btn-primary">
                         <i class="fas fa-user-plus"></i> Register
                     </a>
                 <% } %>
