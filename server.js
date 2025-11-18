@@ -49,6 +49,12 @@ app.use(session({
 // Flash messages
 app.use(flash());
 
+// Request logging
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+});
+
 // Global variables for templates
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
