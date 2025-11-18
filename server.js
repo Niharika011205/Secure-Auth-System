@@ -35,18 +35,22 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(methodOverride('_method'));
 
+// Trust proxy for Render
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
+
 // Session middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // Set to false for now to test
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         sameSite: 'lax'
-    },
-    proxy: process.env.NODE_ENV === 'production' // Trust proxy for Render
+    }
 }));
 
 // Flash messages
